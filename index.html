@@ -35,9 +35,9 @@ body{position:relative}
 
 <style id="desktop-scroll-fix">
 /* Keep the document as the scrolling surface on desktop browsers */
-html,body{height:auto!important;min-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important}
-body{display:flex;flex-direction:column}
-main{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;flex:0 0 auto!important}
+html{height:auto!important;min-height:100%!important;overflow-y:scroll!important;overflow-x:hidden!important}
+body{display:block!important;height:auto!important;min-height:100vh!important;overflow:visible!important}
+main{display:flex!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;flex:none!important}
 body>nav,body>header{flex-shrink:0}
 ::-webkit-scrollbar{display:block;width:8px}
 ::-webkit-scrollbar-thumb{background:#c8b8a7;border-radius:8px}
@@ -604,16 +604,16 @@ body>nav,body>header{flex-shrink:0}
 </div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_24px_-4px_rgba(78,52,24,0.08)]" data-active-classes="text-primary font-bold"><div class="h-16 px-space-xs flex items-center justify-around"><a class="flex flex-col items-center justify-center min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[20px]">restaurant</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] h-11 transition-colors text-primary font-bold" data-path="menu" href="#"><span class="material-symbols-outlined text-[20px]">menu_book</span><span class="font-label-sm text-label-sm mt-0.5">Menu</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="bakery" href="#"><span class="material-symbols-outlined text-[20px]">bakery_dining</span><span class="font-label-sm text-label-sm mt-0.5">Bakery</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="reservation" href="#"><span class="material-symbols-outlined text-[20px]">calendar_month</span><span class="font-label-sm text-label-sm mt-0.5">Reserve</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="contact" href="#"><span class="material-symbols-outlined text-[20px]">alternate_email</span><span class="font-label-sm text-label-sm mt-0.5 truncate max-w-[64px]">@demo@123</span></a></div></nav>
 <script id="desktop-mouse-wheel-fallback">
 (function () {
-  // Fallback for desktop browsers where the page's layout prevents normal wheel scrolling.
+  // Keep native touchpad, mouse wheel, keyboard, and scrollbar scrolling enabled.
+  document.documentElement.style.overflowY = 'scroll';
+  document.body.style.overflowY = 'visible';
   window.addEventListener('wheel', function (event) {
-    if (Math.abs(event.deltaY) < 1) return;
     const root = document.scrollingElement || document.documentElement;
-    const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
-    if (maxScroll <= 0) return;
-    event.preventDefault();
-    const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
-    window.scrollTo({ top: Math.max(0, Math.min(maxScroll, window.scrollY + delta)), behavior: 'auto' });
-  }, { passive: false });
+    if (root.scrollHeight > window.innerHeight) {
+      // Do not cancel the native wheel event; this preserves precision touchpad gestures.
+      return;
+    }
+  }, { passive: true });
 })();
 </script>
 </body></html>
